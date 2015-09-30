@@ -9,6 +9,9 @@
  * If you cannot find the cat at all, you lose and the game will end.
  *
  * There is a function in place to reset the game if you wish to play again.
+ *
+ * EDIT: 29 Sept. 2015
+ * Changes if statement determining if the cat was found into a switch statement
  */
 var found = Math.floor(Math.random() * 2);
 var damageThisRound = Math.floor(Math.random() * 5 + 1);
@@ -19,14 +22,50 @@ var totalDamage = 0;
 var hit = function()
 {
     console.log("Your cat has hidden from you. Let's see if you can find him.")
-    if ( found = 1 )
+    switch(found)
     {
-        //Cat was found
-        console.log("You found the cat, but are you fast enough to catch him?");
-        totalDamage += damageThisRound;
-        if ( totalDamage >= 4 )
-        {
-            console.log("You were fast enough to catch him. You win!");
+        case 1:
+            //Cat was found
+            console.log("You found the cat, but are you fast enough to catch him?");
+            totalDamage += damageThisRound;
+            if ( totalDamage >= 4 )
+            {
+                console.log("You were fast enough to catch him. You win!");
+                next = confirm("Would you like to play again?");
+                if (next == true)
+                {
+                    // Restart and Play again
+                    restart();
+                    hit();
+                }
+                else
+                {
+                    // Player declines to play again
+                    console.log("Goodbye.");
+                }
+            }
+            else
+            {
+                // Too slow to catch cat
+                youHit = Math.floor(Math.random() * 2);
+                console.log("Too slow!")
+                var next = confirm("Too slow! Try again?");
+                if (next == true)
+                {
+                    // try to catch again
+                    hit();
+                }
+                else {
+                    // Player declines to play again
+                    console.log("Goodbye.");
+                }
+            }
+            break;
+
+        default:
+            // Did not find cat
+            console.log("You couldn't find the cat. You lose.");
+            restart();
             next = confirm("Would you like to play again?");
             if (next == true)
             {
@@ -39,41 +78,6 @@ var hit = function()
                 // Player declines to play again
                 console.log("Goodbye.");
             }
-        }
-        else
-        {
-            // Too slow to catch cat
-            youHit = Math.floor(Math.random() * 2);
-            console.log("Too slow!")
-            var next = confirm("Too slow! Try again?");
-            if (next == true)
-            {
-                // try to catch again
-                hit();
-            }
-            else {
-                // Player declines to play again
-                console.log("Goodbye.");
-            }
-        }
-    }
-    else
-    {
-        // Did not find cat
-        console.log("You couldn't find the cat. You lose.");
-        restart();
-        next = confirm("Would you like to play again?");
-        if (next == true)
-        {
-            // Restart and Play again
-            restart();
-            hit();
-        }
-        else
-        {
-            // Player declines to play again
-            console.log("Goodbye.");
-        }
     }
 };
 
@@ -81,7 +85,7 @@ var hit = function()
 /** RESTART FUNCTION = Restarts the game, resets the variables, and clears the console */
 var restart = function()
 {
-    youHit = Math.floor(Math.random() * 2);
+    found = Math.floor(Math.random() * 2);
     damageThisRound = Math.floor(Math.random() * 5 + 1);
     totalDamage = 0;
     console.clear();
